@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-const files = ['1'];//, '2', '3', '4', '5'];
+const files = ['1', '2', '3', '4'];
 
 files.forEach(fileNumber => {
   const data = fs.readFileSync(`./${fileNumber}.txt`, { encoding: "utf8", flag: "r" });
