@@ -64,6 +64,16 @@ function manhattanDistance(point1, point2) {
   return Math.abs(point1[0] - point2[0]) + Math.abs(point1[1] - point2[1]);
 }
 
+function generatePerm(list, size = list.length) {
+  if (size > list.length) return [];
+  else if (size == 1) return list.map((d) => [d]);
+  return list.flatMap((d) =>
+    generatePerm(
+      list.filter((a) => a !== d),
+      size - 1
+    ).map((item) => [d, ...item])
+  );
+}
 
 function getPermutations(arr) {
   const result = [];
@@ -96,7 +106,7 @@ function getPermutations(arr) {
 }
 
 function optimizeNodeOrder(nodes) {
-  const perms = getPermutations(nodes);
+  const perms = generatePerm(nodes);
   let minDistance = 9999999999;
   let minDistancePoints;
   perms.forEach((points) => {
