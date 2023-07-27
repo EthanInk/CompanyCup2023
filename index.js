@@ -18,19 +18,49 @@ files.forEach((fileNumber) => {
 }
 )
 
-function optimizeOrder(nodes, fileNumber) {
-  let previousNode = [0, 0];
-  let output = [];
-  nodes.forEach((node) => {
-    let travelTime =
-      Math.abs(node[0] - previousNode[0]) + Math.abs(node[1] - previousNode[1]);
-    const fullPackages = Math.floor(travelTime / 10);
-    const additionalPackage = Math.round((travelTime % 10) / 10);
+// function optimizeOrder(nodes, fileNumber) {
+//   let previousNode = [0, 0];
+//   let output = [];
+//   nodes.forEach((node) => {
+//     let travelTime =
+//       Math.abs(node[0] - previousNode[0]) + Math.abs(node[1] - previousNode[1]);
+//     const fullPackages = Math.floor(travelTime / 10);
+//     const additionalPackage = Math.round((travelTime % 10) / 10);
+//     const packagesNeeded = fullPackages + additionalPackage;
+//     output.push([packagesNeeded, [node[0], node[1]]]);
+//   });
+//   console.log(output);
+//   fs.writeFileSync(`solution${fileNumber}.txt`, JSON.stringify(output));
+// }
+function packagesForTime(travelTime) {
+  const fullPackages = Math.floor(travelTime / 10);
+    const additionalPackage = Math.round((travelTime % 10)/10);
     const packagesNeeded = fullPackages + additionalPackage;
-    output.push([packagesNeeded, [node[0], node[1]]]);
+    return packagesNeeded;
+}
+
+function optimizeOrder(nodes, fileNumber){
+  let previousNode = [0, 0];
+  let textOut = '[';
+  // let cooldownTime = 0;
+  let oldTravelTime = 0;
+  nodes.forEach((node) => {
+    let travelTime = Math.abs(node[0] - previousNode[0]) + Math.abs(node[1] - previousNode[1]);
+    let packagesNeeded = packagesForTime(travelTime)
+    const cooldownTime = (packagesNeeded * 10) - travelTime;
+    packagesNeeded += cooldownTime > 0 ? packagesForTime(cooldownTime) : 0;
+
+    textOut += `[${packagesNeeded}, [(${node[0]}, ${node[1]})]],`;
+    oldTravelTime = travelTime;
+    // output.push([${packagesNeeded}, [(${node[0]}, ${node[1]})]);
   });
-  console.log(output);
-  fs.writeFileSync(`solution${fileNumber}.txt`, JSON.stringify(output));
+  textOut = textOut.substring(0,textOut.length -1);
+  textOut += ']';
+  let solution = '';
+
+
+  fs.writeFileSync(`solution${fileNumber}.txt`, textOut);
+  //console.log(output);
 }
 
 function manhattanDistance(point1, point2) {
@@ -64,3 +94,5 @@ function optimizeNodeOrder(nodes) {
   minDistancePoints = minDistancePoints.reverse();
   return minDistancePoints;
 }
+
+
