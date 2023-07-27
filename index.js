@@ -61,19 +61,39 @@ function manhattanDistance(point1, point2) {
   return Math.abs(point1[0] - point2[0]) + Math.abs(point1[1] - point2[1]);
 }
 
-function generatePerm(list, size = list.length) {
-  if (size > list.length) return [];
-  else if (size == 1) return list.map((d) => [d]);
-  return list.flatMap((d) =>
-    generatePerm(
-      list.filter((a) => a !== d),
-      size - 1
-    ).map((item) => [d, ...item])
-  );
+
+function getPermutations(arr) {
+  const result = [];
+  let runCount = 0;
+  function swap(arr, i, j) {
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+
+  function generatePermutations(startIndex) {
+    if(runCount >= 10886400) return;
+
+    if (startIndex === arr.length - 1) {
+      result.push([...arr]);
+      runCount++;
+      return;
+    }
+
+    for (let i = startIndex; i < arr.length; i++) {
+      swap(arr, startIndex, i);
+      generatePermutations(startIndex + 1);
+      swap(arr, startIndex, i); // backtrack, restoring the original array
+    }
+  }
+
+  generatePermutations(0);
+  console.log(`count: ${runCount}`);
+  return result;
 }
 
 function optimizeNodeOrder(nodes) {
-  const perms = generatePerm(nodes);
+  const perms = getPermutations(nodes);
   let minDistance = 9999999999;
   let minDistancePoints;
   perms.forEach((points) => {
