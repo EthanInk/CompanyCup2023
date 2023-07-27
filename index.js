@@ -29,7 +29,7 @@ function optimizeOrder(nodes, fileNumber){
   let textOut = '[';
 
   let oldTravelTime = 0;
-  let cooldownTimeSum;
+  let cooldownTimeSum= 0;
 
   nodes.forEach((node) => {
     let travelTime = Math.abs(node[0] - previousNode[0]) + Math.abs(node[1] - previousNode[1]);
@@ -37,7 +37,10 @@ function optimizeOrder(nodes, fileNumber){
     console.log(travelTime);
     console.log('Packages: ' + packagesNeeded);
     const cooldownTime = (packagesNeeded * 10) - travelTime;
-    cooldownTimeSum += cooldownTime > 0 ? cooldownTime : 0;
+    cooldownTimeSum += cooldownTime;
+    const cooldownPackets = Math.floor(cooldownTimeSum / 5);
+    cooldownTimeSum -= Math.floor(cooldownTimeSum / 5);
+    packagesNeeded += cooldownPackets;
     console.log('Cooldown: ' + cooldownTime);
     textOut += `[${packagesNeeded}, [(${node[0]}, ${node[1]})]],`;
     oldTravelTime = travelTime;
