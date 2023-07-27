@@ -29,19 +29,13 @@ function optimizeOrder(nodes, fileNumber){
   let textOut = '[';
 
   let oldTravelTime = 0;
-  let cooldownTimeSum= 0;
+  // let cooldownTimeSum= 0;
 
   nodes.forEach((node) => {
     let travelTime = Math.abs(node[0] - previousNode[0]) + Math.abs(node[1] - previousNode[1]);
     let packagesNeeded = packagesForTime(travelTime)
     console.log(travelTime);
     console.log('Packages: ' + packagesNeeded);
-    const cooldownTime = (packagesNeeded * 10) - travelTime;
-    cooldownTimeSum += cooldownTime;
-    const cooldownPackets = Math.floor(cooldownTimeSum / 5);
-    cooldownTimeSum -= Math.floor(cooldownTimeSum / 5);
-    packagesNeeded += cooldownPackets;
-    console.log('Cooldown: ' + cooldownTime);
     textOut += `[${packagesNeeded}, [(${node[0]}, ${node[1]})]],`;
     oldTravelTime = travelTime;
     console.log('==================');
@@ -49,7 +43,7 @@ function optimizeOrder(nodes, fileNumber){
  
   });
 
-  console.log('Cooldown packages: ' + packagesForTime(cooldownTimeSum));
+  // console.log('Cooldown packages: ' + packagesForTime(cooldownTimeSum));
   console.log('***********************************');
   textOut = textOut.substring(0,textOut.length -1);
   textOut += ']';
@@ -106,7 +100,7 @@ function getPermutations(arr) {
 }
 
 function optimizeNodeOrder(nodes) {
-  const perms = generatePerm(nodes);
+  const perms = getPermutations(nodes);
   let minDistance = 9999999999;
   let minDistancePoints;
   perms.forEach((points) => {
