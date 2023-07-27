@@ -11,3 +11,7 @@ files.forEach(fileNumber => {
   console.log(nodes);
 }
 )
+
+function optimizeOrder(nodes){
+  
+}
