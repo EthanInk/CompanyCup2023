@@ -9,11 +9,11 @@ files.forEach(fileNumber => {
   const matches = lines[0].match(/(\d+, \d+)/g);
   matches.forEach(m => nodes.push(m.split(', ').map(Number)));
   console.log(nodes);
-  optimizeOrder(nodes);
+  optimizeOrder(nodes, fileNumber);
 }
 )
 
-function optimizeOrder(nodes){
+function optimizeOrder(nodes, fileNumber){
   let previousNode = [0, 0];
   let output = [];
   nodes.forEach((node) => {
@@ -23,5 +23,6 @@ function optimizeOrder(nodes){
     const packagesNeeded = fullPackages + additionalPackage;
     output.push([packagesNeeded, [node[0], node[1]]])
   });
-  console.log(output);
+  fs.writeFileSync(`solution${fileNumber}.txt`, JSON.stringify(output));
+  //console.log(output);
 }
