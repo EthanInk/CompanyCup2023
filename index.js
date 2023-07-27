@@ -1,3 +1,4 @@
+const { log } = require("console");
 var fs = require("fs");
 
 const files = ["1", "2", "3", "4"];
@@ -11,8 +12,8 @@ files.forEach((fileNumber) => {
   let lines = data.split("\r\n\r\n");
   const matches = lines[0].match(/(\d+, \d+)/g);
   matches.forEach(m => nodes.push(m.split(', ').map(Number)));
-  console.log(nodes);
   const nodesOpt = optimizeNodeOrder(nodes);
+  console.log(nodesOpt);
   optimizeOrder(nodesOpt, fileNumber);
 }
 )
@@ -28,8 +29,8 @@ function optimizeOrder(nodes, fileNumber) {
     const packagesNeeded = fullPackages + additionalPackage;
     output.push([packagesNeeded, [node[0], node[1]]]);
   });
+  console.log(output);
   fs.writeFileSync(`solution${fileNumber}.txt`, JSON.stringify(output));
-  //console.log(output);
 }
 
 function manhattanDistance(point1, point2) {
@@ -59,10 +60,7 @@ function optimizeNodeOrder(nodes) {
     }
     if (distandce < minDistance) minDistancePoints = points;
   });
-  console.log("optimized routes");
-  console.log(minDistancePoints);
   minDistancePoints.shift();
   minDistancePoints = minDistancePoints.reverse();
-  console.log(minDistancePoints);
-  return minDistancePoints.reverse();
+  return minDistancePoints;
 }
