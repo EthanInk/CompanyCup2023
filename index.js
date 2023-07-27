@@ -13,25 +13,10 @@ files.forEach((fileNumber) => {
   const matches = lines[0].match(/(\d+, \d+)/g);
   matches.forEach(m => nodes.push(m.split(', ').map(Number)));
   const nodesOpt = optimizeNodeOrder(nodes);
-  console.log(nodesOpt);
   optimizeOrder(nodesOpt, fileNumber);
 }
 )
 
-// function optimizeOrder(nodes, fileNumber) {
-//   let previousNode = [0, 0];
-//   let output = [];
-//   nodes.forEach((node) => {
-//     let travelTime =
-//       Math.abs(node[0] - previousNode[0]) + Math.abs(node[1] - previousNode[1]);
-//     const fullPackages = Math.floor(travelTime / 10);
-//     const additionalPackage = Math.round((travelTime % 10) / 10);
-//     const packagesNeeded = fullPackages + additionalPackage;
-//     output.push([packagesNeeded, [node[0], node[1]]]);
-//   });
-//   console.log(output);
-//   fs.writeFileSync(`solution${fileNumber}.txt`, JSON.stringify(output));
-// }
 function packagesForTime(travelTime) {
   const fullPackages = Math.floor(travelTime / 10);
     const additionalPackage = Math.round((travelTime % 10)/10);
@@ -42,18 +27,27 @@ function packagesForTime(travelTime) {
 function optimizeOrder(nodes, fileNumber){
   let previousNode = [0, 0];
   let textOut = '[';
-  // let cooldownTime = 0;
+
   let oldTravelTime = 0;
+  let cooldownTimeSum;
+
   nodes.forEach((node) => {
     let travelTime = Math.abs(node[0] - previousNode[0]) + Math.abs(node[1] - previousNode[1]);
     let packagesNeeded = packagesForTime(travelTime)
+    console.log(travelTime);
+    console.log('Packages: ' + packagesNeeded);
     const cooldownTime = (packagesNeeded * 10) - travelTime;
-    packagesNeeded += cooldownTime > 0 ? packagesForTime(cooldownTime) : 0;
-
+    cooldownTimeSum += cooldownTime > 0 ? cooldownTime : 0;
+    console.log('Cooldown: ' + cooldownTime);
     textOut += `[${packagesNeeded}, [(${node[0]}, ${node[1]})]],`;
     oldTravelTime = travelTime;
-    // output.push([${packagesNeeded}, [(${node[0]}, ${node[1]})]);
+    console.log('==================');
+    previousNode = node;
+ 
   });
+
+  console.log('Cooldown packages: ' + packagesForTime(cooldownTimeSum));
+  console.log('***********************************');
   textOut = textOut.substring(0,textOut.length -1);
   textOut += ']';
   let solution = '';
