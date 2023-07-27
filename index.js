@@ -107,12 +107,13 @@ function optimizeNodeOrder(nodes) {
     points.unshift([0, 0]);
     let distandce = 0;
     for (let i = 1; i < points.length; i++) {
-      distandce = manhattanDistance(points[i], points[i - 1]);
+      distandce += manhattanDistance(points[i], points[i - 1]);
     }
-    if (distandce < minDistance) minDistancePoints = points;
+    if (distandce < minDistance) {
+      minDistance = distandce;
+      minDistancePoints = points;}
   });
   minDistancePoints.shift();
-  minDistancePoints = minDistancePoints.reverse();
   return minDistancePoints;
 }
 
